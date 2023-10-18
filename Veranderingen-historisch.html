@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binnenstad Noord Kaart</title>
+    <style>
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #map-container {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        #map {
+            width: 1000px;
+            height: 800px;
+            object-fit: cover;
+        }
+
+        .marker {
+            width: 20px;
+            height: 20px;
+            background-color: #007bff; /* Voorbeeldkleur */
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Subtiele schaduw */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .marker:hover {
+            background-color: #000000; /* Nieuwe achtergrondkleur bij hover */
+            transform: scale(1.2); /* Vergroot de marker een beetje bij hover */
+        }
+
+        #afbeelding-container {
+            display: none;
+            max-width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Binnenstad Noord Kaart</h1>
+    <div id="map-container">
+        <img id="map" src="Kaart binnenstad noord-09.png" alt="Binnenstad Noord Kaart">
+
+        <div class="marker" id="marker1" style="top: 100px; left: 150px;"></div>
+        <div class="marker" id="marker2" style="top: 200px; left: 250px;"></div>
+    </div>
+
+    <div id="afbeelding-container">
+        <img id="afbeelding" src="" alt="Marker Afbeelding">
+    </div>
+
+    <script>
+        const markers = document.querySelectorAll('.marker');
+        const afbeeldingContainer = document.getElementById('afbeelding-container');
+        const afbeelding = document.getElementById('afbeelding');
+
+        markers.forEach(marker => {
+            marker.addEventListener('mouseover', function() {
+                const markerId = marker.id;
+                const afbeeldingsBestand = markerImages[markerId];
+                afbeelding.src = afbeeldingsBestand;
+                afbeeldingContainer.style.display = 'block';
+            });
+
+            marker.addEventListener('mouseout', function() {
+                afbeeldingContainer.style.display = 'none';
+            });
+
+            marker.addEventListener('click', function(event) {
+                event.stopPropagation(); // Voorkom dat het klikken op de marker de gebeurtenis naar boven doorgeeft
+                // Voeg hier de logica toe om de marker afzonderlijk te linken naar verschillende pagina's
+                if (marker.id === 'marker1') {
+                    window.location.href = 'historisch.html';
+                } else if (marker.id === 'marker2') {
+                    window.location.href = 'hoge der a.html';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

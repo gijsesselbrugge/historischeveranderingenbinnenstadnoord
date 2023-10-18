@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historische veranderingen binnenstad-noord</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-container {
+            margin-top: 20px;
+        }
+
+        #image-container {
+            position: relative;
+            width: 15cm;
+            height: 15cm;
+            overflow: hidden;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .image {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            position: absolute;
+        }
+
+        .slider {
+            width: 80%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Historische veranderingen binnenstad-noord</h1>
+        <div id="image-container"> 
+            <img src="1785_21214.jpg" alt="Historische situatie" class="image" id="historical-image">
+            <img src="1986_00433.jpg" alt="Huidige situatie" class="image" id="current-image">
+        </div>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="50" class="slider" id="image-slider">
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("image-slider");
+        const historicalImage = document.getElementById("historical-image");
+        const currentImage = document.getElementById("current-image");
+
+        slider.addEventListener("input", () => {
+            const value = slider.value;
+            historicalImage.style.opacity = (100 - value) / 100;
+            currentImage.style.opacity = value / 100;
+        });
+    </script>
+</body>
+</html>
