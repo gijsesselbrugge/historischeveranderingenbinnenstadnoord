@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historische veranderingen binnenstad-noord</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <img class="logo" src="LogoGroningen.png" alt="Logo">
+    </div>
+    <style>
+/* Stijl voor de afbeeldingen binnen de pop-up */
+.popup img {
+    width: 100%; /* Afbeeldingen nemen de volledige breedte in beslag */
+    height: auto; /* Behoudt de aspectverhouding van de afbeeldingen */
+    border-radius: 10px; /* Afgeronde hoeken voor de afbeeldingen */
+    position: absolute; /* Positionele plaatsing om overlapping mogelijk te maken */
+    top: 0; /* Plaats de afbeeldingen bovenaan de popup */
+    left: 0; /* Plaats de afbeeldingen links in de popup */
+    width: 600px; /* Pas dit aan naar de gewenste breedte */
+    height: 400px; /* Pas dit aan naar de gewenste hoogte */
+}
+/* Stijl voor de schuifregelaar */
+.slider {
+    width: 80%;
+    position: absolute; /* Positionele plaatsing voor de schuifregelaar */
+    bottom: 20px; /* Afstand vanaf de onderkant van de popup */
+    left: 50%; /* Plaats de schuifregelaar in het midden van de popup */
+    transform: translateX(-50%); /* Centreer de schuifregelaar horizontaal */
+}
+        body {
+            margin: 0;
+            background-size: cover;
+    background-position: center;
+    height: 100vh;
+    overflow: hidden;
+            font-family: josefin sans, thin;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            margin-top: 20px  
+        }
+        
+        .leaflet-popup-content-wrapper {
+    width: 650px; /* Breedte van de pop-upcontainer */
+    height: 450px; /* Hoogte van de pop-upcontainer */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+}
+
+/* Stijl voor de historische afbeelding */
+.historical-image,
+.current-image {
+    width: 100%; /* Zorg ervoor dat de afbeeldingen de volledige breedte van het pop-upvenster innemen */
+    height: auto;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    transform: translate(-0%, -0%);
+    width: 600px; /* Pas dit aan naar de gewenste breedte */
+    height: 400px; /* Pas dit aan naar de gewenste hoogte */
+}
+/* Aangepaste CSS-stijlen voor Leaflet OSM-kaart */
+
+.images-container {
+    position: relative;
+    width: 450px;
+    height: 450px; /* Stel de hoogte in voor de afbeeldingen */
+}
+.leaflet-container {
+    background-color: #464646; /* Achtergrondkleur van de kaartcontainer */
+    border: 2px solid #000000; /* Rand rondom de kaartcontainer */
+}
+.logo {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 100px; /* Pas de breedte aan zoals gewenst */
+    height: auto; /* Hierdoor wordt de hoogte automatisch aangepast om de verhoudingen te behouden */
+}
+        #map {
+            width: 1000px; /* Breedte van de kaartcontainer */
+            height: 700px; /* Hoogte van de kaartcontainer */
+        }
+
+
+
+/* Andere CSS-stijlen blijven zoals eerder gedefinieerd */
+
+   </style>
+</head>
+
+<body>
+    <h1>Historische veranderingen binnenstad-noord</h1>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        
+        var map = L.map('map').setView([53.219711, 6.567395], 14);
+
+// Voeg de OpenStreetMap basiskaart toe
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+var markersData = [
+    {
+        lat: 53.219711,
+        lng: 6.567395,
+        historicalImage: 'kwinkenplein kleur.png',
+        currentImage: 'test kwinkenplein.png'
+    },
+    {
+        lat: 53.220000,
+        lng: 6.568000,
+        historicalImage: 'test kwinkenplein.png',
+        currentImage: 'kwinkenplein kleur.png'
+    },
+    {
+        lat: 53.425678,
+        lng: 6.574321,
+        historicalImage: 'historical3.jpg',
+        currentImage: 'current3.jpg'
+    }    
+    // Voeg hier meer markers toe indien nodig
+];
+
+function createPopupContent(marker) {
+    var historicalImageSrc = marker.historicalImage;
+    var currentImageSrc = marker.currentImage;
+
+    var popupContent = `
+        <div class="popup-content">
+            <img id="historical-image" class="popup-image" src="${historicalImageSrc}" alt="Historical Image">
+            <img id="current-image" class="popup-image" src="${currentImageSrc}" alt="Current Image">
+            <input type="range" id="slider" class="slider" value="50" step="1" min="0" max="100">
+        </div>
+    `;
+
+    return popupContent;
+}
+
+markersData.forEach(function(marker) {
+    var popupContent = `
+        <div class="popup">
+            <div class="images-container">
+                <img class="popup-image historical-image" src="${marker.historicalImage}" alt="Historical Image">
+                <img class="popup-image current-image" src="${marker.currentImage}" alt="Current Image">
+            </div>
+            <input class="slider" type="range" min="0" max="1" step="0.01" value="0.5">
+        </div>
+    `;
+
+    var customPopup = L.popup().setContent(popupContent);
+
+    L.marker([marker.lat, marker.lng]).addTo(map).bindPopup(customPopup).on('click', function() {
+        var slider = document.querySelector('.slider');
+        var historicalImage = document.querySelector('.historical-image');
+        var currentImage = document.querySelector('.current-image');
+
+        slider.addEventListener('input', function() {
+            var transparencyValue = slider.value;
+            historicalImage.style.opacity = transparencyValue;
+            currentImage.style.opacity = 1 - transparencyValue;
+        });
+    });
+});
+
+
+    </script>
+</body>
+
+</html>
